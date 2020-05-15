@@ -1,0 +1,3 @@
+{
+  "mongoURI": "mongodb+srv://hudaprs:hudaprs@merncontactkeeper-fsrcb.mongodb.net/test?retryWrites=true&w=majority"
+}
