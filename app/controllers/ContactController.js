@@ -1,12 +1,34 @@
 const { success, error } = require("../helpers/responseApi");
+const { validationResult } = require("express-validator");
+const Contact = require("../models/Contact");
+const User = require("../models/User");
 
 /**
  * @desc    Get all contacts
  * @method  GET api/contacts
  * @access  Private
  */
-exports.getContacts = (req, res) => {
-  res.send("Get Get all contacts");
+exports.getContacts = async (req, res) => {
+  try {
+    const contact = await Contact.find({ user: req.user.id }).sort({
+      date: -1,
+    });
+
+    // Check existing contacts
+    if (contact.length == 0)
+      return res
+        .status(200)
+        .json(
+          success("User doesn't have contact yet", contact, res.statusCode)
+        );
+
+    res
+      .status(200)
+      .json(success(`${req.user.name} Contact list`, contact, res.statusCode));
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json(error("Server error", res.statusCode));
+  }
 };
 
 /**

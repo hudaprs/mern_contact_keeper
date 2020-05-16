@@ -5,8 +5,9 @@ const {
   updateContact,
   deleteContact,
 } = require("../app/controllers/ContactController");
+const auth = require("../app/middleware/auth");
 
-router.get("/", getContacts);
+router.get("/", auth, getContacts);
 router.post("/", createContact);
 router.put("/:id", updateContact);
 router.delete("/:id", deleteContact);
