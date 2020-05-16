@@ -70,8 +70,44 @@ exports.createContact = async (req, res) => {
  * @method  PUT api/contacts/:id
  * @access  Private
  */
-exports.updateContact = (req, res) => {
-  res.send("Update contact");
+exports.updateContact = async (req, res) => {
+  const { name, email, phone, type } = req.body;
+  const { id } = req.params;
+  let contactFields = {};
+
+  if (name) contactFields.name = name;
+  if (email) contactFields.email = email;
+  if (phone) contactFields.phone = phone;
+  if (type) contactFields.type = type;
+
+  try {
+    let contact = await Contact.findById(req.params.id);
+
+    // Check if contact is exists
+    if (!contact)
+      return res.json(404).json(error("Contact not found", res.statusCode));
+
+    // Check for correct user
+    if (contact.user.toString() !== req.user.id)
+      return res
+        .status(401)
+        .json(error("You unauthorized to do this action", res.statusCode));
+
+    contact = await Contact.findByIdAndUpdate(
+      id,
+      {
+        $set: contactFields,
+      },
+      {
+        new: true,
+      }
+    );
+
+    res.status(200).json(success("Contact updated", contact, res.statusCode));
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json(error("Server error", res.statusCode));
+  }
 };
 
 /**
@@ -79,6 +115,26 @@ exports.updateContact = (req, res) => {
  * @method  POST api/contacts/:id
  * @access  Private
  */
-exports.deleteContact = (req, res) => {
-  res.send("Delete contact");
+exports.deleteContact = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let contact = await Contact.findById(id);
+
+    // Check if contact exists
+    if (!contact)
+      return res.status(404).json(error("Contact not found", res.statusCode));
+
+    if (contact.user.toString() !== req.user.id)
+      return res
+        .status(401)
+        .json(error("You unauthorized to do this action", res.statusCode));
+
+    contact = await Contact.findByIdAndRemove(id);
+
+    res.status(200).json(success("Contact removed", contact, res.statusCode));
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json(error("Server error", res.statusCode));
+  }
 };
