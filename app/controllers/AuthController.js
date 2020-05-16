@@ -10,8 +10,17 @@ const bcrypt = require("bcryptjs");
  * @method  GET api/users
  * @access  Private
  */
-exports.getLoggedUser = (req, res) => {
-  res.send("Get logged user");
+exports.getLoggedUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+
+    res
+      .status(200)
+      .json(success(`Hello ${req.user.name}`, user, res.statusCode));
+  } catch (err) {
+    console.error(err.message);
+    res.status(401).json(error("Unauthorized", res.statusCode));
+  }
 };
 
 /**
