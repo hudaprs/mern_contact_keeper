@@ -20,7 +20,7 @@ exports.success = (message, results, statusCode) => {
  */
 exports.error = (message, statusCode) => {
   // List of common HTTP request code
-  const codes = [200, 201, 400, 401, 404, 403, 500];
+  const codes = [200, 201, 400, 401, 404, 403, 422, 500];
 
   // Get matched code
   const findCode = codes.find((code) => code == statusCode);

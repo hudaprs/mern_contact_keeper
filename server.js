@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Connect to database
 connectDB();
