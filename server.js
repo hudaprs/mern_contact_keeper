@@ -1,7 +1,11 @@
 const express = require("express");
 const app = express();
 const connectDB = require("./config/db");
+const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 5000;
+
+// Middleware
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Connect to database
 connectDB();
