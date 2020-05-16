@@ -19,7 +19,11 @@ exports.getContacts = async (req, res) => {
       return res
         .status(200)
         .json(
-          success("User doesn't have contact yet", contact, res.statusCode)
+          success(
+            `${req.user.name} doesn't have contact yet`,
+            contact,
+            res.statusCode
+          )
         );
 
     res
@@ -36,8 +40,29 @@ exports.getContacts = async (req, res) => {
  * @method  POST api/contacts
  * @access  Private
  */
-exports.createContact = (req, res) => {
-  res.send("Create new contact");
+exports.createContact = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(422).json({ errors: errors.array() });
+
+  const { name, email, phone, type } = req.body;
+
+  try {
+    const newContact = new Contact({
+      name,
+      email,
+      phone,
+      type,
+      user: req.user.id,
+    });
+
+    const contact = await newContact.save();
+
+    res.status(201).json(success("Contact created", contact, res.statusCode));
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json(error("Server error", res.statusCode));
+  }
 };
 
 /**
