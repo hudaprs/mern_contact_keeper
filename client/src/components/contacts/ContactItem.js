@@ -11,7 +11,7 @@ const ContactItem = ({ contact }) => {
         <em
           style={{ float: "right" }}
           className={`badge badge-${
-            type == "professional" ? "danger" : "primary"
+            type == "professional" ? "success" : "primary"
           }`}
         >
           {`${type.charAt(0).toUpperCase()}${type.slice(1)}`}

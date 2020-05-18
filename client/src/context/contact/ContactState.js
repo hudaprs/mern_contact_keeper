@@ -40,9 +40,15 @@ const ContactState = (props) => {
 
   const [state, dispatch] = useReducer(ContactReducer, initialState);
 
+  // Add Contact
+  const addContact = (contact) => {
+    contact.id = state.contacts.length + 1;
+    dispatch({ type: ADD_CONTACT, payload: contact });
+  };
+
   const { contacts } = state;
   return (
-    <ContactContext.Provider value={{ contacts }}>
+    <ContactContext.Provider value={{ contacts, addContact }}>
       {props.children}
     </ContactContext.Provider>
   );
