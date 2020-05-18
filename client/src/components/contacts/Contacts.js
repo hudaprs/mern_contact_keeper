@@ -14,9 +14,17 @@ const Contacts = () => {
           <ContactForm />
         </div>
         <div>
-          {contacts.map((contact) => (
-            <ContactItem contact={contact} key={contact.id} />
-          ))}
+          {contacts.length === 0 ? (
+            <Fragment>
+              <h1 className="text-center" style={{ color: "#dc3545" }}>
+                No Contact Found
+              </h1>{" "}
+            </Fragment>
+          ) : (
+            contacts.map((contact) => (
+              <ContactItem contact={contact} key={contact.id} />
+            ))
+          )}
         </div>
       </div>
     </Fragment>
