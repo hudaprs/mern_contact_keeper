@@ -2,10 +2,11 @@ import React, { Fragment, useContext } from "react";
 import ContactContext from "../../context/contact/contactContext";
 import ContactItem from "./ContactItem";
 import ContactForm from "./ContactForm";
+import ContactFilter from "./ContactFilter";
 
 const Contacts = () => {
   const contactContext = useContext(ContactContext);
-  const { contacts } = contactContext;
+  const { contacts, filtered } = contactContext;
 
   return (
     <Fragment>
@@ -14,7 +15,12 @@ const Contacts = () => {
           <ContactForm />
         </div>
         <div>
-          {contacts.length === 0 ? (
+          <ContactFilter />
+          {filtered !== null ? (
+            filtered.map((contact) => (
+              <ContactItem contact={contact} key={contact.id} />
+            ))
+          ) : contacts.length === 0 ? (
             <Fragment>
               <h1 className="text-center" style={{ color: "#dc3545" }}>
                 No Contact Found
