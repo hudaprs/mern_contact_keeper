@@ -3,6 +3,7 @@ import {
   DELETE_CONTACT,
   SET_CURRENT,
   CLEAR_CURRENT,
+  UPDATE_CONTACT,
 } from "../types";
 
 export default (state, action) => {
@@ -27,6 +28,13 @@ export default (state, action) => {
       return {
         ...state,
         current: null,
+      };
+    case UPDATE_CONTACT:
+      return {
+        ...state,
+        contacts: state.contacts.map((contact) =>
+          contact.id === payload.id ? payload : contact
+        ),
       };
     default:
       return state;

@@ -18,7 +18,7 @@ const ContactItem = ({ contact }) => {
   return (
     <div className="card bg-light">
       <h3 className="text-primary text-left">
-        {name}
+        {name}{" "}
         <em
           style={{ float: "right" }}
           className={`badge badge-${
