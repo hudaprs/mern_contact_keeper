@@ -1,4 +1,9 @@
-import { ADD_CONTACT, DELETE_CONTACT } from "../types";
+import {
+  ADD_CONTACT,
+  DELETE_CONTACT,
+  SET_CURRENT,
+  CLEAR_CURRENT,
+} from "../types";
 
 export default (state, action) => {
   const { type, payload } = action;
@@ -12,6 +17,16 @@ export default (state, action) => {
       return {
         ...state,
         contacts: state.contacts.filter((contact) => contact.id !== payload),
+      };
+    case SET_CURRENT:
+      return {
+        ...state,
+        current: payload,
+      };
+    case CLEAR_CURRENT:
+      return {
+        ...state,
+        current: null,
       };
     default:
       return state;

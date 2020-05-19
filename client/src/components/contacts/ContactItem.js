@@ -1,17 +1,17 @@
 import React, { Fragment, useContext } from "react";
 import PropTypes from "prop-types";
 import ContactContext from "../../context/contact/contactContext";
-import contactContext from "../../context/contact/contactContext";
 
 const ContactItem = ({ contact }) => {
   const contactContext = useContext(ContactContext);
-  const { deleteContact } = contactContext;
+  const { deleteContact, setCurrent, clearCurrent } = contactContext;
 
   const { id, name, email, phone, type } = contact;
 
   const onDelete = () => {
     if (window.confirm(`Delete ${name}?`)) {
       deleteContact(id);
+      clearCurrent();
     }
   };
 
@@ -22,7 +22,7 @@ const ContactItem = ({ contact }) => {
         <em
           style={{ float: "right" }}
           className={`badge badge-${
-            type == "professional" ? "success" : "primary"
+            type === "professional" ? "success" : "primary"
           }`}
         >
           {`${type.charAt(0).toUpperCase()}${type.slice(1)}`}
@@ -45,7 +45,11 @@ const ContactItem = ({ contact }) => {
         </li>
       </ul>
       <p>
-        <button type="button" className="btn btn-dark btn-sm">
+        <button
+          type="button"
+          className="btn btn-dark btn-sm"
+          onClick={() => setCurrent(contact)}
+        >
           Edit
         </button>
         <button
