@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import AlertContext from "../../context/alert/alertContext";
 
 const Register = () => {
+  const alertContext = useContext(AlertContext);
+  const { setAlert } = alertContext;
+
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -12,7 +16,14 @@ const Register = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("Register Hitted");
+    // Simple validation
+    if (name === "" || email === "" || password === "") {
+      setAlert("Please fill all forms", "danger");
+    } else if (password !== password2) {
+      setAlert("Password did not match", "danger");
+    } else {
+      console.log("Register Hitted");
+    }
   };
 
   const { name, email, password, password2 } = user;
@@ -23,7 +34,7 @@ const Register = () => {
       <form onSubmit={onSubmit}>
         <div className="form-group">
           <label htmlFor="name">Name</label>
-          <input type="text" name="text" value={name} onChange={onChange} />
+          <input type="text" name="name" value={name} onChange={onChange} />
         </div>
         <div className="form-group">
           <label htmlFor="email">Email</label>
