@@ -6,6 +6,7 @@ import {
   AUTH_ERROR,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
+  LOGOUT,
 } from "../types";
 
 export default (state, { type, payload }) => {
@@ -31,6 +32,7 @@ export default (state, { type, payload }) => {
     case REGISTER_FAIL:
     case AUTH_ERROR:
     case LOGIN_FAIL:
+    case LOGOUT:
       localStorage.clear();
       return {
         ...state,

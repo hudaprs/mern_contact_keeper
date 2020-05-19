@@ -9,6 +9,7 @@ import {
   USER_LOADED,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
+  LOGOUT,
 } from "../types";
 import axios from "axios";
 import setAuthToken from "../../utils/setAuthToken";
@@ -82,6 +83,8 @@ const AuthState = (props) => {
     }
   };
 
+  const logout = () => dispatch({ type: LOGOUT });
+
   // Clear errors
   const clearErrors = () => dispatch({ type: CLEAR_ERRORS });
 
@@ -98,6 +101,7 @@ const AuthState = (props) => {
         clearErrors,
         loadUser,
         login,
+        logout,
       }}
     >
       {props.children}
