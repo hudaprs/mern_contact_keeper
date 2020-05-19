@@ -4,6 +4,8 @@ import {
   CLEAR_ERRORS,
   USER_LOADED,
   AUTH_ERROR,
+  LOGIN_FAIL,
+  LOGIN_SUCCESS,
 } from "../types";
 
 export default (state, { type, payload }) => {
@@ -17,6 +19,7 @@ export default (state, { type, payload }) => {
         error: null,
       };
     case REGISTER_SUCCESS:
+    case LOGIN_SUCCESS:
       localStorage.setItem("token", payload);
       return {
         ...state,
@@ -27,6 +30,7 @@ export default (state, { type, payload }) => {
       };
     case REGISTER_FAIL:
     case AUTH_ERROR:
+    case LOGIN_FAIL:
       localStorage.clear();
       return {
         ...state,

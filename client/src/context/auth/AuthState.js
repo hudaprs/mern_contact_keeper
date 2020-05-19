@@ -7,6 +7,8 @@ import {
   CLEAR_ERRORS,
   AUTH_ERROR,
   USER_LOADED,
+  LOGIN_FAIL,
+  LOGIN_SUCCESS,
 } from "../types";
 import axios from "axios";
 import setAuthToken from "../../utils/setAuthToken";
@@ -58,6 +60,28 @@ const AuthState = (props) => {
     }
   };
 
+  // Login
+  const login = async (formData) => {
+    try {
+      const loggedIn = await axios.post("/api/auth", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const { token } = loggedIn.data.results;
+
+      dispatch({ type: LOGIN_SUCCESS, payload: token });
+
+      loadUser();
+    } catch (err) {
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: err.response.data.message,
+      });
+    }
+  };
+
   // Clear errors
   const clearErrors = () => dispatch({ type: CLEAR_ERRORS });
 
@@ -73,6 +97,7 @@ const AuthState = (props) => {
         register,
         clearErrors,
         loadUser,
+        login,
       }}
     >
       {props.children}
