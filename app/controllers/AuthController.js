@@ -16,7 +16,7 @@ exports.getLoggedUser = async (req, res) => {
 
     res
       .status(200)
-      .json(success(`Hello ${req.user.name}`, user, res.statusCode));
+      .json(success(`Hello ${req.user.name}`, { user }, res.statusCode));
   } catch (err) {
     console.error(err.message);
     res.status(401).json(error("Unauthorized", res.statusCode));

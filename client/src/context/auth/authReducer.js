@@ -1,6 +1,21 @@
-import { REGISTER_SUCCESS, REGISTER_FAIL, CLEAR_ERRORS } from "../types";
+import {
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  CLEAR_ERRORS,
+  USER_LOADED,
+  AUTH_ERROR,
+} from "../types";
+
 export default (state, { type, payload }) => {
   switch (type) {
+    case USER_LOADED:
+      return {
+        ...state,
+        user: payload,
+        loading: false,
+        isAuthenticated: true,
+        error: null,
+      };
     case REGISTER_SUCCESS:
       localStorage.setItem("token", payload);
       return {
@@ -11,9 +26,14 @@ export default (state, { type, payload }) => {
         error: null,
       };
     case REGISTER_FAIL:
+    case AUTH_ERROR:
       localStorage.clear();
       return {
         ...state,
+        token: null,
+        isAuthenticated: false,
+        loading: false,
+        user: null,
         error: payload,
       };
     case CLEAR_ERRORS:
