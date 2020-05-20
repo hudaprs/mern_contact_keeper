@@ -7,7 +7,14 @@ const Register = (props) => {
   const authContext = useContext(AuthContext);
 
   const { setAlert } = alertContext;
-  const { register, error, clearErrors, isAuthenticated } = authContext;
+  const {
+    register,
+    serverErrors,
+    isAuthenticated,
+    loading,
+    isSuccess,
+    clearSuccess,
+  } = authContext;
 
   const [user, setUser] = useState({
     name: "",
@@ -20,11 +27,10 @@ const Register = (props) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // Simple validation
     if (name === "" || email === "" || password === "") {
       setAlert("Please fill all forms", "danger");
     } else if (password !== password2) {
-      setAlert("Password did not match", "danger");
+      setAlert("Password confirmation did not match", "danger");
     } else {
       register({
         name,
@@ -35,16 +41,27 @@ const Register = (props) => {
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      props.history.push("/");
+    if (isAuthenticated) props.history.push("/");
+
+    if (serverErrors) {
+      if (serverErrors.message === "Email already exists") {
+        setAlert(serverErrors.message, "danger");
+      }
     }
 
-    if (error === "Email already exists") {
-      setAlert(error, "danger");
-      clearErrors();
+    if (isSuccess) {
+      props.history.push("/login");
+      setAlert("Register Successfully", "success");
+      setUser({
+        name: "",
+        email: "",
+        password: "",
+        password2: "",
+      });
+      clearSuccess();
     }
     // eslint-disable-next-line
-  }, [error, isAuthenticated, props.history]);
+  }, [serverErrors, isSuccess, props.history]);
 
   const { name, email, password, password2 } = user;
 
@@ -78,7 +95,12 @@ const Register = (props) => {
             onChange={onChange}
           />
         </div>
-        <button type="submit" className="btn btn-primary btn-block">
+        <button
+          type="submit"
+          className="btn btn-primary btn-block"
+          disabled={loading}
+        >
+          {loading && <em className="fas fa-circle-notch fa-spin"></em>}{" "}
           Register
         </button>
       </form>

@@ -7,7 +7,7 @@ const Login = (props) => {
   const authContext = useContext(AuthContext);
 
   const { setAlert } = alertContext;
-  const { login, error, clearErrors, isAuthenticated } = authContext;
+  const { login, serverErrors, isAuthenticated, loading } = authContext;
 
   const [user, setUser] = useState({
     email: "",
@@ -18,24 +18,27 @@ const Login = (props) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    login({
-      email,
-      password,
-    });
+    if (email === "" || password === "") {
+      setAlert("Please fill all forms", "danger");
+    } else {
+      login(user);
+    }
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      props.history.push("/");
-    }
+    if (isAuthenticated) props.history.push("/");
 
-    if (error) {
-      setAlert(error, "danger");
-      clearErrors();
+    if (serverErrors) {
+      if (
+        serverErrors.message === "Email doesn't exists" ||
+        serverErrors.message === "Password doesn't match"
+      ) {
+        setAlert(serverErrors.message, "danger");
+      }
     }
 
     // eslint-disable-next-line
-  }, [props.history, isAuthenticated, error]);
+  }, [serverErrors]);
 
   const { email, password } = user;
 
@@ -56,8 +59,12 @@ const Login = (props) => {
             onChange={onChange}
           />
         </div>
-        <button type="submit" className="btn btn-primary btn-block">
-          Login
+        <button
+          type="submit"
+          className="btn btn-primary btn-block"
+          disabled={loading}
+        >
+          {loading && <em className="fas fa-circle-notch fa-spin"></em>} Login
         </button>
       </form>
     </div>

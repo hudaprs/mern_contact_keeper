@@ -1,12 +1,13 @@
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
-  CLEAR_ERRORS,
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   LOGOUT,
+  SET_LOADING,
+  CLEAR_SUCCESS,
 } from "../types";
 
 export default (state, { type, payload }) => {
@@ -17,17 +18,24 @@ export default (state, { type, payload }) => {
         user: payload,
         loading: false,
         isAuthenticated: true,
-        error: null,
+        serverErrors: null,
       };
     case REGISTER_SUCCESS:
+      return {
+        ...state,
+        isSuccess: true,
+        loading: false,
+        serverErrors: null,
+      };
     case LOGIN_SUCCESS:
       localStorage.setItem("token", payload);
       return {
         ...state,
         token: payload,
         isAuthenticated: true,
+        isSuccess: true,
         loading: false,
-        error: null,
+        serverErrors: null,
       };
     case REGISTER_FAIL:
     case AUTH_ERROR:
@@ -38,14 +46,20 @@ export default (state, { type, payload }) => {
         ...state,
         token: null,
         isAuthenticated: false,
+        isSuccess: false,
         loading: false,
         user: null,
-        error: payload,
+        serverErrors: payload,
       };
-    case CLEAR_ERRORS:
+    case SET_LOADING:
       return {
         ...state,
-        error: null,
+        loading: true,
+      };
+    case CLEAR_SUCCESS:
+      return {
+        ...state,
+        isSuccess: false,
       };
     default:
       return state;

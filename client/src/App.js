@@ -12,13 +12,8 @@ import ContactState from "./context/contact/ContactState";
 import AlertState from "./context/alert/AlertState";
 
 import PrivateRoute from "./components/routing/PrivateRoute";
-import setAuthToken from "./utils/setAuthToken";
 
 import "./App.css";
-
-if (localStorage.token) {
-  setAuthToken(localStorage.token);
-}
 
 const App = () => {
   return (
