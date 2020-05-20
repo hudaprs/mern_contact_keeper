@@ -9,11 +9,18 @@ import {
   SET_LOADING,
   CONTACT_ERROR,
   CLEAR_SUCCESS,
+  GET_CONTACT,
 } from "../types";
 
 export default (state, action) => {
   const { type, payload } = action;
   switch (type) {
+    case GET_CONTACT:
+      return {
+        ...state,
+        contacts: payload,
+        loading: false,
+      };
     case ADD_CONTACT:
       return {
         ...state,

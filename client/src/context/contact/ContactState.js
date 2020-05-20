@@ -12,6 +12,7 @@ import {
   SET_LOADING,
   CONTACT_ERROR,
   CLEAR_SUCCESS,
+  GET_CONTACT,
 } from "../types";
 import axios from "axios";
 
@@ -31,6 +32,18 @@ const ContactState = (props) => {
 
   // Clear Success
   const clearSuccess = () => dispatch({ type: CLEAR_SUCCESS });
+
+  // Get Contacts
+  const getContacts = async () => {
+    setLoading();
+    try {
+      const contacts = await axios.get("/api/contacts");
+
+      dispatch({ type: GET_CONTACT, payload: contacts.data.results });
+    } catch (err) {
+      dispatch({ type: CONTACT_ERROR });
+    }
+  };
 
   // Add Contact
   const addContact = async (contact) => {
@@ -92,6 +105,7 @@ const ContactState = (props) => {
         filterContacts,
         clearFilter,
         clearSuccess,
+        getContacts,
       }}
     >
       {props.children}
