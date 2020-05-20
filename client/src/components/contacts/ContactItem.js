@@ -1,19 +1,37 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
+import AlertContext from "../../context/alert/alertContext";
 import ContactContext from "../../context/contact/contactContext";
 
 const ContactItem = ({ contact }) => {
+  const alertContext = useContext(AlertContext);
   const contactContext = useContext(ContactContext);
-  const { deleteContact, setCurrent, clearCurrent } = contactContext;
 
-  const { id, name, email, phone, type } = contact;
+  const { setAlert } = alertContext;
+  const {
+    deleteContact,
+    setCurrent,
+    clearCurrent,
+    isSuccess,
+    clearSuccess,
+    message,
+  } = contactContext;
+  const { _id, name, email, phone, type } = contact;
 
   const onDelete = () => {
     if (window.confirm(`Delete ${name}?`)) {
-      deleteContact(id);
+      deleteContact(_id);
       clearCurrent();
     }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setAlert(message, "success");
+      clearSuccess();
+    }
+    // eslint-disable-next-line
+  }, [clearSuccess]);
 
   return (
     <div className="card bg-light">

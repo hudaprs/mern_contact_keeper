@@ -24,16 +24,20 @@ export default (state, action) => {
     case ADD_CONTACT:
       return {
         ...state,
-        contacts: [...state.contacts, payload],
+        contacts: [payload.results, ...state.contacts],
         loading: false,
         isSuccess: true,
+        message: payload.message,
       };
     case DELETE_CONTACT:
       return {
         ...state,
-        contacts: state.contacts.filter((contact) => contact.id !== payload),
+        contacts: state.contacts.filter(
+          (contact) => contact._id !== payload.results._id
+        ),
         loading: false,
         isSuccess: true,
+        message: payload.message,
       };
     case SET_CURRENT:
       return {

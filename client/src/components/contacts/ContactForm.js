@@ -22,6 +22,7 @@ const ContactForm = () => {
     loading,
     isSuccess,
     clearSuccess,
+    message,
   } = contactContext;
 
   const { name, email, phone, type } = contact;
@@ -58,7 +59,7 @@ const ContactForm = () => {
     }
 
     if (isSuccess) {
-      setAlert("Contact saved", "success");
+      setAlert(message, "success");
       setContact({
         name: "",
         email: "",

@@ -23,6 +23,7 @@ const ContactState = (props) => {
     filtered: null,
     loading: false,
     isSuccess: false,
+    message: "",
   };
 
   const [state, dispatch] = useReducer(ContactReducer, initialState);
@@ -52,15 +53,22 @@ const ContactState = (props) => {
     try {
       const newContact = await axios.post("/api/contacts", contact);
 
-      dispatch({ type: ADD_CONTACT, payload: newContact.data.results });
+      dispatch({ type: ADD_CONTACT, payload: newContact.data });
     } catch (err) {
       dispatch({ type: CONTACT_ERROR, payload: err.response.data });
     }
   };
 
   // Delete contact
-  const deleteContact = (id) => {
-    dispatch({ type: DELETE_CONTACT, payload: id });
+  const deleteContact = async (id) => {
+    setLoading();
+    try {
+      const delContact = await axios.delete(`/api/contacts/${id}`);
+
+      dispatch({ type: DELETE_CONTACT, payload: delContact.data });
+    } catch (err) {
+      dispatch({ type: CONTACT_ERROR, payload: err.response.data });
+    }
   };
 
   // Set current
@@ -88,7 +96,7 @@ const ContactState = (props) => {
     dispatch({ type: CLEAR_FILTER });
   };
 
-  const { contacts, current, filtered, isSuccess, loading } = state;
+  const { contacts, current, filtered, isSuccess, loading, message } = state;
   return (
     <ContactContext.Provider
       value={{
@@ -97,6 +105,7 @@ const ContactState = (props) => {
         filtered,
         loading,
         isSuccess,
+        message,
         addContact,
         deleteContact,
         setCurrent,
