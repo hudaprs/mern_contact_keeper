@@ -82,8 +82,19 @@ const ContactState = (props) => {
   };
 
   // Update contact
-  const updateContact = (contact) => {
-    dispatch({ type: UPDATE_CONTACT, payload: contact });
+  const updateContact = async (contact) => {
+    setLoading();
+
+    try {
+      const upContact = await axios.put(
+        `/api/contacts/${contact._id}`,
+        contact
+      );
+
+      dispatch({ type: UPDATE_CONTACT, payload: upContact.data });
+    } catch (err) {
+      dispatch({ type: CONTACT_ERROR, payload: err.response.data });
+    }
   };
 
   // Filter contacts

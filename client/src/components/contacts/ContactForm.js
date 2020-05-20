@@ -66,10 +66,11 @@ const ContactForm = () => {
         phone: "",
         type: "personal",
       });
+      clearCurrent();
       clearSuccess();
     }
     // eslint-disable-next-line
-  }, [contactContext, current, clearSuccess]);
+  }, [contactContext, current, clearSuccess, clearCurrent]);
 
   return (
     <form onSubmit={onSubmit}>

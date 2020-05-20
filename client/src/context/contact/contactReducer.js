@@ -55,9 +55,11 @@ export default (state, action) => {
       return {
         ...state,
         contacts: state.contacts.map((contact) =>
-          contact.id === payload.id ? payload : contact
+          contact._id === payload.results._id ? payload.results : contact
         ),
         loading: false,
+        isSuccess: true,
+        message: payload.message,
       };
     case FILTER_CONTACT:
       return {
