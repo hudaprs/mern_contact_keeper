@@ -9,43 +9,40 @@ import {
   UPDATE_CONTACT,
   FILTER_CONTACT,
   CLEAR_FILTER,
+  SET_LOADING,
+  CONTACT_ERROR,
+  CLEAR_SUCCESS,
 } from "../types";
+import axios from "axios";
 
 const ContactState = (props) => {
   const initialState = {
-    contacts: [
-      {
-        id: "1",
-        name: "Huda Prasetyo",
-        email: "huda.prs2002@gmail.com",
-        phone: "1111-1111-1111",
-        type: "personal",
-      },
-      {
-        id: "2",
-        name: "Raihan",
-        email: "raihan@gmail.com",
-        phone: "2222-2222-2222",
-        type: "professional",
-      },
-      {
-        id: "3",
-        name: "Haura",
-        email: "haura@gmail.com",
-        phone: "3333-3333-3333",
-        type: "personal",
-      },
-    ],
+    contacts: [],
     current: null,
     filtered: null,
+    loading: false,
+    isSuccess: false,
   };
 
   const [state, dispatch] = useReducer(ContactReducer, initialState);
 
+  // Set Loading
+  const setLoading = () => dispatch({ type: SET_LOADING });
+
+  // Clear Success
+  const clearSuccess = () => dispatch({ type: CLEAR_SUCCESS });
+
   // Add Contact
-  const addContact = (contact) => {
-    contact.id = state.contacts.length + 1;
-    dispatch({ type: ADD_CONTACT, payload: contact });
+  const addContact = async (contact) => {
+    setLoading();
+
+    try {
+      const newContact = await axios.post("/api/contacts", contact);
+
+      dispatch({ type: ADD_CONTACT, payload: newContact.data.results });
+    } catch (err) {
+      dispatch({ type: CONTACT_ERROR, payload: err.response.data });
+    }
   };
 
   // Delete contact
@@ -78,13 +75,15 @@ const ContactState = (props) => {
     dispatch({ type: CLEAR_FILTER });
   };
 
-  const { contacts, current, filtered } = state;
+  const { contacts, current, filtered, isSuccess, loading } = state;
   return (
     <ContactContext.Provider
       value={{
         contacts,
         current,
         filtered,
+        loading,
+        isSuccess,
         addContact,
         deleteContact,
         setCurrent,
@@ -92,6 +91,7 @@ const ContactState = (props) => {
         updateContact,
         filterContacts,
         clearFilter,
+        clearSuccess,
       }}
     >
       {props.children}

@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
+import AlertContext from "../../context/alert/alertContext";
 import ContactContext from "../../context/contact/contactContext";
-import contactContext from "../../context/contact/contactContext";
 
 const ContactForm = () => {
   const [contact, setContact] = useState({
@@ -10,9 +10,19 @@ const ContactForm = () => {
     type: "personal",
   });
 
-  const { addContact, current, clearCurrent, updateContact } = useContext(
-    ContactContext
-  );
+  const alertContext = useContext(AlertContext);
+  const contactContext = useContext(ContactContext);
+
+  const { setAlert } = alertContext;
+  const {
+    addContact,
+    current,
+    clearCurrent,
+    updateContact,
+    loading,
+    isSuccess,
+    clearSuccess,
+  } = contactContext;
 
   const { name, email, phone, type } = contact;
 
@@ -31,25 +41,34 @@ const ContactForm = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (current !== null) {
-      updateContact(contact);
+    if (name === "") {
+      setAlert("Name is required", "danger");
     } else {
-      addContact(contact);
+      if (current !== null) {
+        updateContact(contact);
+      } else {
+        addContact(contact);
+      }
     }
-    clearAll();
   };
 
   useEffect(() => {
-    if (current !== null) setContact(current);
-    else
+    if (current !== null) {
+      setContact(current);
+    }
+
+    if (isSuccess) {
+      setAlert("Contact saved", "success");
       setContact({
         name: "",
         email: "",
         phone: "",
         type: "personal",
       });
+      clearSuccess();
+    }
     // eslint-disable-next-line
-  }, [contactContext, current]);
+  }, [contactContext, current, clearSuccess]);
 
   return (
     <form onSubmit={onSubmit}>
@@ -95,7 +114,12 @@ const ContactForm = () => {
       />
       Professional
       <div>
-        <button type="submit" className="btn btn-primary btn-block">
+        <button
+          type="submit"
+          className="btn btn-primary btn-block"
+          disabled={loading}
+        >
+          {loading && <em className="fas fa-circle-notch fa-spin"></em>}{" "}
           {current ? "Update Contact" : "Add Contact"}
         </button>
       </div>
